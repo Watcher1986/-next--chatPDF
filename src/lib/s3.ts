@@ -1,6 +1,6 @@
 import AWS from 'aws-sdk';
 
-export async function uploadToS3(file: File, folder: string) {
+export async function uploadToS3(file: File) {
   // const s3 = new AWS.S3({
   //   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
   //   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
@@ -44,7 +44,7 @@ export async function uploadToS3(file: File, folder: string) {
       .promise();
 
     await upload.then((data) => {
-      console.log('successfully uploaded to S3!', file_key);
+      console.log('successfully uploaded to S3!', file_key, data);
     });
 
     return Promise.resolve({
