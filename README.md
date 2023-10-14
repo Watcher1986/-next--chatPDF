@@ -35,7 +35,7 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
-Project configuration commands:
+## Project configuration commands:
 
 ```bash
 # create project with TS
@@ -44,5 +44,6 @@ npx create-next-app@latest --ts
 npx shadcn-ui@latest init
 # installing shadcn compnents
 npx shadcn-ui@latest add button
-
+# installing clerk authentication SDK
+npm install @clerk/nextjs
 ```
