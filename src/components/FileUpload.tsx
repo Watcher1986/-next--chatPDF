@@ -29,12 +29,10 @@ const FileUpload = () => {
     accept: { 'application/pdf': ['.pdf'] },
     maxFiles: 1,
     onDrop: async (acceptedFiles) => {
-      console.log(acceptedFiles);
       const file = acceptedFiles[0];
       if (file.size > 10 * 1024 * 1024) {
         // bigger than 10mb
         toast.error('File size is too big');
-        // alert('File size is too big');
         return;
       }
 
@@ -49,13 +47,12 @@ const FileUpload = () => {
         mutate(data, {
           onSuccess: (data) => {
             console.log('DATA  =>>>>', data);
-            toast.success(data.message);
+            // toast.success(data.message);
           },
           onError: (err) => {
             toast.error('Error creating chat');
           },
         });
-        console.log('DATA uploaded to s3!', data);
       } catch (error) {
         console.error(error);
       } finally {
