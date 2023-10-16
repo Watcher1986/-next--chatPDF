@@ -41,17 +41,14 @@ export async function loadS3IntoPinecone(fileKey: string) {
 
   // 2. split and segment the pdf into
   const documents = await Promise.all(pages.map(prepareDocument));
-  console.log('documents =............', documents, 'Pages.........', pages);
 
   // 3. vectorize and embed individual documents
   const vectors = await Promise.all(documents.flat().map(embedDocument));
-  console.log('vectors =............', vectors);
 
   // 4. upload to pinecone
   const client = await getPineconeClient();
-  const pineconeIndex = await client.index('chat-pdf-service');
+  const pineconeIndex = client.index('chat-pdf-service');
 
-  console.log('inserting vectors into pinecone');
   // const namespace = convertToAscii(fileKey)
   // const namespace = pineconeIndex.namespace(convertToAscii(fileKey));
   await pineconeIndex.upsert(vectors);
