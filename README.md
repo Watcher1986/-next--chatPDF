@@ -46,4 +46,6 @@ npx shadcn-ui@latest init
 npx shadcn-ui@latest add button
 # installing clerk authentication SDK
 npm install @clerk/nextjs
+# push changes to Neon db
+npx drizzle-kit push:pg
 ```
