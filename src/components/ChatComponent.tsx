@@ -27,7 +27,7 @@ const ChatComponent = ({ chatId }: Props) => {
     body: {
       chatId,
     },
-    initialMessages: data || [],
+    initialMessages: data ?? [],
   });
 
   useEffect(() => {

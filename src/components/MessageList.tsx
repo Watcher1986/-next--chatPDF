@@ -15,7 +15,7 @@ const MessageList = ({ messages, isLoading }: Props) => {
       </div>
     );
   }
-  if (!messages || !messages.length) return null;
+  if (!messages?.length) return null;
 
   return (
     <div className='flex flex-col gap-2 px-4'>

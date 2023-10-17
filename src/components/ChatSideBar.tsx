@@ -1,32 +1,18 @@
 'use client';
-import { useState } from 'react';
 import Link from 'next/link';
-import axios from 'axios';
 import { MessageCircle, PlusCircle } from 'lucide-react';
 import { DrizzleChat } from '@/lib/db/schema';
 import { Button } from './ui/button';
 import { cn } from '@/lib/utils';
+import SubscriptionBtn from './SubscriptionBtn';
 
 type Props = {
   chats: DrizzleChat[];
   chatId: number;
+  isPro: boolean;
 };
 
-const ChatSideBar = ({ chats, chatId }: Props) => {
-  const [loading, setLoading] = useState(false);
-
-  const handleSubscription = async () => {
-    try {
-      setLoading(true);
-      const response = await axios.get('/api/stripe');
-      window.location.href = response.data.url;
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
+const ChatSideBar = ({ chats, chatId, isPro }: Props) => {
   return (
     <div className='relative w-full h-screen p-4 text-gray-200 bg-gray-900'>
       <Link href='/'>
@@ -54,18 +40,15 @@ const ChatSideBar = ({ chats, chatId }: Props) => {
         ))}
       </div>
 
-      <div className='absolute bottom-4 left-4'>
+      <div className='absolute bottom-4 left-1/2 -translate-x-1/2'>
         <div className='flex items-center gap-2 text-sm text-slate-500 flex-wrap'>
           <Link href='/'>Home</Link>
           <Link href='/'>Source</Link>
         </div>
-        <Button
-          disabled={loading}
-          onClick={handleSubscription}
-          className='mt-2 text-white bg-slate-700'
-        >
-          Upgrade To Pro!
-        </Button>
+
+        <div className='flex items-center justify-center mt-3 text-slate-800'>
+          <SubscriptionBtn isPro={isPro} size='lg' />
+        </div>
       </div>
     </div>
   );

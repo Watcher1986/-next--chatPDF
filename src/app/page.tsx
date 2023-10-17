@@ -1,12 +1,24 @@
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
 import { UserButton, auth } from '@clerk/nextjs';
-import { LogIn } from 'lucide-react';
+import { ArrowRight, LogIn } from 'lucide-react';
+import { eq } from 'drizzle-orm';
+import { checkSubscription } from '@/lib/subscription';
+import { db } from '@/lib/db';
+import { chats } from '@/lib/db/schema';
+
+import { Button } from '@/components/ui/button';
+import SubscriptionBtn from '@/components/SubscriptionBtn';
 import FileUpload from '@/components/FileUpload';
 
 export default async function Home() {
   const { userId } = auth();
   const isAuth = !!userId;
+  const isPro = await checkSubscription();
+  let firstChat;
+  if (userId) {
+    firstChat = await db.select().from(chats).where(eq(chats.userId, userId));
+    if (firstChat) firstChat = firstChat[0];
+  }
 
   return (
     <div className='w-screen min-h-screen bg-[radial-gradient(ellipse_at_right,_var(--tw-gradient-stops))] from-sky-400 to-indigo-900'>
@@ -18,11 +30,17 @@ export default async function Home() {
           </div>
 
           <div className='flex mt-3'>
-            {isAuth && (
-              <Link href='/chat'>
-                <Button>Go to chats</Button>
+            {isAuth && firstChat && (
+              <Link href={`/chat/${firstChat.id}`}>
+                <Button>
+                  Go to chats
+                  <ArrowRight className='ml-2' />
+                </Button>
               </Link>
             )}
+            <div className='ml-3'>
+              <SubscriptionBtn isPro={isPro} size='default' />
+            </div>
           </div>
 
           <p className='max-w-xl mt-2 text-lg text-slate-700'>
