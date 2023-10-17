@@ -27,9 +27,6 @@ const ChatPage = async ({ params: { chatId } }: Props) => {
   if (!_chats?.find((chat) => chat.id === parseInt(chatId))) {
     return redirect('/');
   }
-  // if (!_chats.find((chat) => chat.id === parseInt(chatId))) {
-  //   return redirect('/');
-  // }
 
   const currentChat = _chats.find((chat) => chat.id === parseInt(chatId));
 
@@ -41,11 +38,11 @@ const ChatPage = async ({ params: { chatId } }: Props) => {
           <ChatSideBar chatId={+chatId} chats={_chats} isPro={isPro} />
         </div>
         {/* pdf viewer */}
-        <div className='max-h-screen p-4 flex-[5]'>
+        <div className='max-h-screen flex-[5]'>
           <PDFViewer pdf_url={currentChat?.pdfUrl ?? ''} />
         </div>
         {/* chat component */}
-        <div className='flex-[2.5] border-1-4 border-1-slate-200'>
+        <div className='flex-[2.5] border-1-4 border-1-slate-200 bg-slate-100'>
           <ChatComponent chatId={+chatId} />
         </div>
       </div>

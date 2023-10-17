@@ -42,7 +42,7 @@ const ChatComponent = ({ chatId }: Props) => {
   return (
     <div className='relative max-h-screen' id='messages-container'>
       {/* header */}
-      <div className='sticky top-0 inset-x-0 p-2 bg-white h-fit'>
+      <div className='sticky top-0 inset-x-0 p-2 bg-transparent h-fit'>
         <h3 className='text-xl font-bold'>Chat</h3>
       </div>
 
@@ -51,7 +51,7 @@ const ChatComponent = ({ chatId }: Props) => {
 
       <form
         onSubmit={handleSubmit}
-        className='sticky bottom-0 inset-x-0 px-2 py-4 bg-white'
+        className='sticky bottom-0 inset-x-0 px-2 py-4 bg-transparent'
       >
         <div className='flex'>
           <Input

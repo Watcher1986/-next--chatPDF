@@ -1,5 +1,5 @@
-import { eq } from 'drizzle-orm';
 // /api/stripe
+import { eq } from 'drizzle-orm';
 import { NextResponse } from 'next/server';
 import { auth, currentUser } from '@clerk/nextjs';
 import { db } from '@/lib/db';
@@ -10,7 +10,7 @@ const return_url = process.env.NEXT_BASE_URL + '/';
 
 export async function GET() {
   try {
-    const { userId } = await auth();
+    const { userId } = auth();
     const user = await currentUser();
 
     if (!userId) {
@@ -21,7 +21,7 @@ export async function GET() {
       .select()
       .from(userSubscriptions)
       .where(eq(userSubscriptions.userId, userId));
-    if (_userSubscription[0] && _userSubscription[0].stripeCustomerId) {
+    if (_userSubscription[0]?.stripeCustomerId) {
       // trying to cancel at the billing portal
       const stripeSession = await stripe.billingPortal.sessions.create({
         customer: _userSubscription[0].stripeCustomerId,

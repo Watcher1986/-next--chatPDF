@@ -38,9 +38,11 @@ export default async function Home() {
                 </Button>
               </Link>
             )}
-            <div className='ml-3'>
-              <SubscriptionBtn isPro={isPro} size='default' />
-            </div>
+            {userId && (
+              <div className='ml-3'>
+                <SubscriptionBtn isPro={isPro} size='default' />
+              </div>
+            )}
           </div>
 
           <p className='max-w-xl mt-2 text-lg text-slate-700'>

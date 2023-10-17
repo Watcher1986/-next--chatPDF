@@ -1,21 +1,20 @@
-// /api/create-chat
-import { NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs';
-import { loadS3IntoPinecone } from '@/lib/pinecone';
+import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { chats } from '@/lib/db/schema';
+import { loadS3IntoPinecone } from '@/lib/pinecone';
 import { getS3Url } from '@/lib/s3';
 
+// /api/create-chat
 export async function POST(req: Request, res: Response) {
   const { userId } = auth();
   if (!userId) {
-    NextResponse.json({ error: 'unauthorized' }, { status: 401 });
+    return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
   }
-
   try {
     const body = await req.json();
     const { file_key, file_name } = body;
-    console.log(file_key, file_name, body);
+
     await loadS3IntoPinecone(file_key);
     const chat_id = await db
       .insert(chats)
@@ -35,10 +34,10 @@ export async function POST(req: Request, res: Response) {
       },
       { status: 200 }
     );
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    console.error(error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'internal server error' },
       { status: 500 }
     );
   }
