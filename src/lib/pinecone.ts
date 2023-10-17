@@ -1,4 +1,8 @@
-import { Pinecone, PineconeRecord } from '@pinecone-database/pinecone';
+import {
+  Pinecone,
+  PineconeRecord,
+  RecordMetadata,
+} from '@pinecone-database/pinecone';
 import {
   Document,
   RecursiveCharacterTextSplitter,
@@ -7,7 +11,7 @@ import md5 from 'md5';
 import { PDFLoader } from 'langchain/document_loaders/fs/pdf';
 import { downloadFromS3 } from './s3-server';
 import { getEmbeddings } from './embeddings';
-import { convertToAscii } from './utils';
+// import { convertToAscii } from './utils';
 
 let pinecone: Pinecone | null = null;
 
@@ -51,7 +55,8 @@ export async function loadS3IntoPinecone(fileKey: string) {
 
   // const namespace = convertToAscii(fileKey)
   // const namespace = pineconeIndex.namespace(convertToAscii(fileKey));
-  await pineconeIndex.upsert(vectors);
+  // @ts-ignore
+  if (vectors?.length) await pineconeIndex.upsert(vectors);
 
   return documents[0];
 }
@@ -68,7 +73,7 @@ async function embedDocument(doc: Document) {
         text: doc.metadata.text,
         pageNumber: doc.metadata.pageNumber,
       },
-    } as PineconeRecord;
+    } as PineconeRecord<RecordMetadata>;
   } catch (error) {
     console.log('error embedding document', error);
   }
