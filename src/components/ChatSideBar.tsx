@@ -1,28 +1,40 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { MessageCircle, PlusCircle, Trash2 } from 'lucide-react';
 
 import { DrizzleChat } from '@/lib/db/schema';
 import { Button } from './ui/button';
-import { cn } from '@/lib/utils';
+import { cn, getChatIndex } from '@/lib/utils';
 
 import SubscriptionBtn from './SubscriptionBtn';
 import Modal from './Modal';
 import toast from 'react-hot-toast';
 
 type Props = {
-  chats: DrizzleChat[];
   chatId: number;
   isPro: boolean;
 };
 
-const ChatSideBar = ({ chats, chatId, isPro }: Props) => {
+const ChatSideBar = ({ chatId, isPro }: Props) => {
+  const queryClient = useQueryClient();
+  const router = useRouter();
   const [isModal, setIsModal] = useState(false);
   const [chatToDelete, setChatToDelete] = useState(0);
+  const query = useQuery({
+    queryKey: ['chat'],
+    queryFn: async () => {
+      const response = await axios.post<DrizzleChat[]>('/api/get-chats');
+      return response.data;
+    },
+  });
+
+  const chatIdx = getChatIndex(chatId, query.data!);
+
   const { isLoading, mutate } = useMutation({
     mutationFn: async (chat_id: number) => {
       const response = await axios.delete('/api/remove-chat', {
@@ -45,6 +57,16 @@ const ChatSideBar = ({ chats, chatId, isPro }: Props) => {
     mutate(chatToDelete, {
       onSuccess: (data) => {
         toast.success(data.message);
+        const removedChatIdx = getChatIndex(chatToDelete, query.data!);
+        if (removedChatIdx === chatIdx) {
+          const goToChatId =
+            chatIdx === 0
+              ? query?.data?.[1].id
+              : query?.data?.[chatIdx! - 1].id;
+          router.push(`/chat/${goToChatId}`);
+          return;
+        }
+        queryClient.invalidateQueries({ queryKey: ['chat'] });
       },
       onError: (err) => {
         console.error(err);
@@ -72,7 +94,7 @@ const ChatSideBar = ({ chats, chatId, isPro }: Props) => {
         </Link>
 
         <div className='flex flex-col gap-2 mt-4'>
-          {chats.map((chat) => (
+          {query?.data?.map((chat) => (
             <Link key={chat.id} href={`/chat/${chat.id}`}>
               <div
                 className={cn(
@@ -96,7 +118,7 @@ const ChatSideBar = ({ chats, chatId, isPro }: Props) => {
           ))}
         </div>
 
-        {isLoading && <p>Loading...</p>}
+        {isLoading && query.isLoading && <p>Loading...</p>}
 
         <div className='absolute bottom-4 left-1/2 -translate-x-1/2'>
           <div className='flex items-center justify-center text-sm text-slate-500 flex-wrap'>
