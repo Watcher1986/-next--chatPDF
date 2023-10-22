@@ -11,11 +11,12 @@ export async function downloadFromS3(file_key: string) {
 
     const obj = await s3.getObject(params).promise();
 
-    const file_name = `./tmp/${file_key.split('uploads/')[1]}`;
-    if (!fs.existsSync('./tmp')) fs.mkdirSync('./tmp');
+    const file_name = `/tmp/${file_key.split('uploads/')[1]}`;
+    if (!fs.existsSync('/tmp')) fs.mkdirSync('/tmp');
     if (fs.existsSync(file_name)) fs.unlinkSync(file_name);
 
     fs.writeFileSync(file_name, obj.Body as Buffer);
+
     return file_name;
   } catch (err) {
     console.error(err);
@@ -31,8 +32,8 @@ export async function removeFromS3(file_key: string) {
       Key: file_key,
     };
 
-    if (fs.existsSync(`./tmp/${file_key.split('uploads/')[1]}`))
-      fs.unlinkSync(`./tmp/${file_key.split('uploads/')[1]}`);
+    if (fs.existsSync(`/tmp/${file_key.split('uploads/')[1]}`))
+      fs.unlinkSync(`/tmp/${file_key.split('uploads/')[1]}`);
 
     await s3.deleteObject(params).promise();
   } catch (err) {

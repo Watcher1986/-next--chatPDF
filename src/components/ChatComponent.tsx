@@ -1,9 +1,11 @@
 'use client';
+
 import { useEffect } from 'react';
 import { useChat } from 'ai/react';
 import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
 import { Message } from 'ai';
+
 import { Input } from './ui/input';
 import { Button } from './ui/button';
 import { Send } from 'lucide-react';
