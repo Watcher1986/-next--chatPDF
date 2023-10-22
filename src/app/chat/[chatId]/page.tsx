@@ -1,13 +1,14 @@
 import { auth } from '@clerk/nextjs';
 import { redirect } from 'next/navigation';
 import { eq } from 'drizzle-orm';
+
 import { db } from '@/lib/db';
 import { chats } from '@/lib/db/schema';
 import { checkSubscription } from '@/lib/subscription';
 
-import ChatSideBar from '@/components/ChatSideBar';
 import PDFViewer from '@/components/PDFViewer';
 import ChatComponent from '@/components/ChatComponent';
+import ChatSideBar from './_components/ChatSideBar';
 
 type Props = {
   params: {
@@ -17,7 +18,7 @@ type Props = {
 
 const ChatPage = async ({ params: { chatId } }: Props) => {
   const { userId } = auth();
-  const isPro = await checkSubscription();
+  const isPro = await checkSubscription({ userId });
 
   if (!userId) {
     return redirect('/sign-in');

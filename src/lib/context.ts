@@ -1,5 +1,4 @@
 import { Pinecone } from '@pinecone-database/pinecone';
-import { convertToAscii } from './utils';
 import { getEmbeddings } from './embeddings';
 
 export async function getMatchesFromEmbeddings(
@@ -13,7 +12,6 @@ export async function getMatchesFromEmbeddings(
   const index = pinecone.index('chat-pdf-service');
 
   try {
-    const namespace = convertToAscii(fileKey);
     const queryResult = await index.query({
       topK: 5,
       vector: embeddings,

@@ -18,14 +18,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang='en'>
-      <ClerkProvider>
+      <body className={inter.className}>
         <Providers>
-          <body className={inter.className}>
+          <ClerkProvider>
             {children}
             <Toaster />
-          </body>
+          </ClerkProvider>
         </Providers>
-      </ClerkProvider>
+      </body>
     </html>
   );
 }

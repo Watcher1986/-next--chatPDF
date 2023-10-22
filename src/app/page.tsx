@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { UserButton, auth } from '@clerk/nextjs';
 import { ArrowRight, LogIn } from 'lucide-react';
 import { eq } from 'drizzle-orm';
+
 import { checkSubscription } from '@/lib/subscription';
 import { db } from '@/lib/db';
 import { chats } from '@/lib/db/schema';
@@ -13,7 +14,7 @@ import FileUpload from '@/components/FileUpload';
 export default async function Home() {
   const { userId } = auth();
   const isAuth = !!userId;
-  const isPro = await checkSubscription();
+  const isPro = await checkSubscription({ userId });
   let firstChat;
   if (userId) {
     firstChat = await db.select().from(chats).where(eq(chats.userId, userId));
@@ -21,7 +22,7 @@ export default async function Home() {
   }
 
   return (
-    <div className='w-screen min-h-screen bg-[radial-gradient(ellipse_at_right,_var(--tw-gradient-stops))] from-sky-400 to-indigo-900'>
+    <div className='w-screen min-h-screen bg-[radial-gradient(ellipse_at_right,_var(--tw-gradient-stops))] from-sky-300 to-indigo-900'>
       <div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'>
         <div className='flex flex-col items-center text-center'>
           <div className='flex items-center'>
@@ -39,7 +40,7 @@ export default async function Home() {
               </Link>
             )}
             {userId && (
-              <div className='ml-3'>
+              <div className='ml-5'>
                 <SubscriptionBtn isPro={isPro} size='default' />
               </div>
             )}

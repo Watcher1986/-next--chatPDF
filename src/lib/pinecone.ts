@@ -9,9 +9,9 @@ import {
 } from '@pinecone-database/doc-splitter';
 import md5 from 'md5';
 import { PDFLoader } from 'langchain/document_loaders/fs/pdf';
+
 import { downloadFromS3 } from './s3-server';
 import { getEmbeddings } from './embeddings';
-// import { convertToAscii } from './utils';
 
 let pinecone: Pinecone | null = null;
 
@@ -53,10 +53,11 @@ export async function loadS3IntoPinecone(fileKey: string) {
   const client = await getPineconeClient();
   const pineconeIndex = client.index('chat-pdf-service');
 
-  // const namespace = convertToAscii(fileKey)
-  // const namespace = pineconeIndex.namespace(convertToAscii(fileKey));
-  // @ts-ignore
-  if (vectors?.length) await pineconeIndex.upsert(vectors);
+  if (vectors?.length) {
+    const valid_vectors = vectors.filter((v) => v);
+    // @ts-ignore
+    await pineconeIndex.upsert(valid_vectors);
+  }
 
   return documents[0];
 }
