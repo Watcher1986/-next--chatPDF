@@ -8,7 +8,7 @@ import { checkSubscription } from '@/lib/subscription';
 
 import PDFViewer from '@/components/PDFViewer';
 import ChatComponent from '@/components/ChatComponent';
-import ChatSideBar from '../../../components/ChatSideBar';
+import ChatSideBar from '@/components/ChatSideBar';
 
 type Props = {
   params: {
