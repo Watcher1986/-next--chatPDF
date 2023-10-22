@@ -1,5 +1,6 @@
-import { auth } from '@clerk/nextjs';
 import { NextResponse } from 'next/server';
+import { auth } from '@clerk/nextjs';
+
 import { db } from '@/lib/db';
 import { chats } from '@/lib/db/schema';
 import { loadS3IntoPinecone } from '@/lib/pinecone';

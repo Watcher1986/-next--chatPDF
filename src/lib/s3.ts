@@ -1,28 +1,20 @@
 import AWS from 'aws-sdk';
 
+export const initS3 = () => {
+  AWS.config.update({
+    accessKeyId: process.env.NEXT_PUBLIC_S3_ACCESS_KEY_ID,
+    secretAccessKey: process.env.NEXT_PUBLIC_S3_SECRET_ACCESS_KEY,
+  });
+  const s3 = new AWS.S3({
+    params: { Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME },
+    region: 'eu-north-1',
+  });
+  return s3;
+};
+
 export async function uploadToS3(file: File) {
-  // const s3 = new AWS.S3({
-  //   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  //   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  // })
-
-  // const params = {
-  //   Bucket: 'react-blog-bucket',
-  //   Key: `${folder}/${file.name}`,
-  //   Body: file,
-  // }
-
-  // return s3.upload(params).promise()
-
   try {
-    AWS.config.update({
-      accessKeyId: process.env.NEXT_PUBLIC_S3_ACCESS_KEY_ID,
-      secretAccessKey: process.env.NEXT_PUBLIC_S3_SECRET_ACCESS_KEY,
-    });
-    const s3 = new AWS.S3({
-      params: { Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME },
-      region: 'eu-north-1',
-    });
+    const s3 = initS3();
 
     const file_key =
       'uploads/' + Date.now().toString() + file.name.replace(' ', '-');
@@ -36,15 +28,15 @@ export async function uploadToS3(file: File) {
       .putObject(params)
       .on('httpUploadProgress', (evt) => {
         console.log(
-          'Upload to AWS S3 in progress ',
+          'Upload to AWS S3 in progress...',
           evt,
           parseInt(((evt.loaded * 100) / evt.total).toString()) + '%'
         );
       })
       .promise();
 
-    await upload.then((data) => {
-      console.log('successfully uploaded to S3!', file_key, data);
+    await upload.then((_) => {
+      console.log('successfully uploaded to S3!');
     });
 
     return Promise.resolve({

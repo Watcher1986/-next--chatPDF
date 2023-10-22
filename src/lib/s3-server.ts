@@ -1,17 +1,9 @@
-import AWS from 'aws-sdk';
 import fs from 'fs';
+import { initS3 } from './s3';
 
 export async function downloadFromS3(file_key: string) {
   try {
-    AWS.config.update({
-      accessKeyId: process.env.NEXT_PUBLIC_S3_ACCESS_KEY_ID,
-      secretAccessKey: process.env.NEXT_PUBLIC_S3_SECRET_ACCESS_KEY,
-    });
-    const s3 = new AWS.S3({
-      params: { Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME },
-      region: 'eu-north-1',
-    });
-
+    const s3 = initS3();
     const params = {
       Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME!,
       Key: file_key,
@@ -19,7 +11,7 @@ export async function downloadFromS3(file_key: string) {
 
     const obj = await s3.getObject(params).promise();
 
-    const file_name = `./tmp/pdf-${Date.now()}.pdf`;
+    const file_name = `./tmp/${file_key.split('uploads/')[1]}`;
     if (!fs.existsSync('./tmp')) fs.mkdirSync('./tmp');
     if (fs.existsSync(file_name)) fs.unlinkSync(file_name);
 
@@ -28,5 +20,22 @@ export async function downloadFromS3(file_key: string) {
   } catch (err) {
     console.error(err);
     return null;
+  }
+}
+
+export async function removeFromS3(file_key: string) {
+  try {
+    const s3 = initS3();
+    const params = {
+      Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME!,
+      Key: file_key,
+    };
+
+    if (fs.existsSync(`./tmp/${file_key.split('uploads/')[1]}`))
+      fs.unlinkSync(`./tmp/${file_key.split('uploads/')[1]}`);
+
+    await s3.deleteObject(params).promise();
+  } catch (err) {
+    console.error(err);
   }
 }

@@ -1,11 +1,13 @@
 'use client';
+
 import { useState } from 'react';
+import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { useDropzone } from 'react-dropzone';
 import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
 import toast from 'react-hot-toast';
 import { Inbox, Loader2 } from 'lucide-react';
+
 import { uploadToS3 } from '@/lib/s3';
 
 const FileUpload = () => {
