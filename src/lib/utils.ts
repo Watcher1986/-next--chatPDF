@@ -14,5 +14,5 @@ export const convertToAscii = (inputString: string) => {
 };
 
 export const getChatIndex = (chatId: number, chats: DrizzleChat[]) => {
-  return chats.findIndex((chat) => chat.id === chatId);
+  return chats?.findIndex((chat) => chat.id === chatId);
 };
