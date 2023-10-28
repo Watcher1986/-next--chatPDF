@@ -1,10 +1,7 @@
 import { Pinecone } from '@pinecone-database/pinecone';
 import { getEmbeddings } from './embeddings';
 
-export async function getMatchesFromEmbeddings(
-  embeddings: number[],
-  fileKey: string
-) {
+export async function getMatchesFromEmbeddings(embeddings: number[]) {
   const pinecone = new Pinecone({
     environment: process.env.PINECONE_ENVIRONMENT!,
     apiKey: process.env.PINECONE_API_KEY!,
@@ -26,7 +23,7 @@ export async function getMatchesFromEmbeddings(
 
 export async function getContext(query: string, fileKey: string) {
   const queryEmbeddings = await getEmbeddings(query);
-  const matches = await getMatchesFromEmbeddings(queryEmbeddings, fileKey);
+  const matches = await getMatchesFromEmbeddings(queryEmbeddings);
 
   const qualifyingDocs = matches.filter(
     (match) => match.score && match.score > 0.7

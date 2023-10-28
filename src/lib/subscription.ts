@@ -1,5 +1,4 @@
 import { eq } from 'drizzle-orm';
-// import { auth } from '@clerk/nextjs';
 import { db } from './db';
 import { userSubscriptions } from './db/schema';
 
@@ -10,7 +9,6 @@ export const checkSubscription = async ({
 }: {
   userId: string | null;
 }) => {
-  // const { userId } = auth();
   if (!userId) return false;
   const _userSubscriptions = await db
     .select()

@@ -18,18 +18,18 @@ const MessageList = ({ messages, isLoading }: Props) => {
   if (!messages?.length) return null;
 
   return (
-    <div className='flex flex-col gap-2 px-4'>
+    <div className='flex flex-col gap-2 p-4 max-h-[700px] overflow-y-auto'>
       {messages.map((message) => (
         <div
           key={message.id}
           className={cn('flex', {
             'justify-end pl-10': message.role === 'user',
-            'justify-start pr-10': message.role === 'assistant',
+            'justify-start mr-10 bg-white': message.role === 'system',
           })}
         >
           <div
             className={cn(
-              'rounded-lg px-3 text-sm py-1 shadow-md ring-1 ring-gray-900/10',
+              'rounded-lg px-3 text-sm py-2 shadow-md ring-1 ring-gray-900/10',
               { 'bg-blue-600 text-white': message.role === 'user' }
             )}
           >
